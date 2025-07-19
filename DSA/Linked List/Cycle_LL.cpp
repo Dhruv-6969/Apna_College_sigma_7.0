@@ -81,10 +81,10 @@ public:
 
         while (temp != NULL)
         {
-            cout << temp->data << " ";
+            cout << temp->data << " -> ";
             temp = temp->next;
         }
-        cout << endl;
+        cout << "NULL" << endl;
     }
 
     void pop_front()
@@ -92,6 +92,7 @@ public:
         if (head == NULL)
         {
             cout << "Linked List is empty\n";
+            return;
         }
 
         Node *temp = head;
@@ -106,6 +107,7 @@ public:
         if (head == NULL)
         {
             cout << "Linked List is empty\n";
+            return;
         }
 
         Node *temp = head;
@@ -139,10 +141,56 @@ public:
         cout << "Cycle Does Not Exists\n";
         return false;
     }
+
+    void removeCycle(Node *head)
+    {
+        Node *slow = head;
+        Node *fast = head;
+        bool isCycle = false;
+
+        while (fast != NULL && fast->next != NULL)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast)
+            {
+                isCycle = true;
+                break;
+            }
+        }
+
+        if (!isCycle)
+        {
+            cout << "Cycle doesnot exists\n";
+            return;
+        }
+
+        slow = head;
+        if (slow == fast)
+        { // special case
+            while (fast->next != slow)
+            {
+                fast = fast->next;
+            }
+            fast->next = NULL; // remove cycle
+        }
+        else
+        {
+            Node *prev = fast;
+
+            while (slow != fast)
+            {
+                slow = slow->next;
+                prev = fast;
+                fast = fast->next;
+            }
+            prev->next = NULL; // remove cycle
+        }
+    }
 };
 
-int
-main()
+int main()
 {
     List ll;
 
@@ -154,6 +202,9 @@ main()
     ll.tail->next = ll.head;
 
     ll.isCycle(ll.head);
+
+    ll.removeCycle(ll.head);
+    ll.printList();
 
     return 0;
 }
